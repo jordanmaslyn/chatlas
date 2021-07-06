@@ -10,14 +10,14 @@ const ioHandler = (req, res) => {
       socket.broadcast.emit('a user connected')
 
       socket.on('hello', roomId => {
-          console.log(`joined ${roomId}`)
-          socket.join(roomId);
-          socket.to(roomId).emit('say', 'new person joined! say hello.')
+        console.log(`joined ${roomId}`)
+        socket.join(roomId);
+        socket.to(roomId).emit('say', 'new person joined! say hello.')
       });
 
-      socket.on('say', (message, roomId) => {
-          console.log(`said "${message}" to ${roomId}`);
-          socket.to(roomId).emit('say', message);
+      socket.on('say', ({ message, timestamp }, roomId) => {
+        console.log(`said "${message}" to ${roomId}`);
+        socket.to(roomId).emit('say', { message, timestamp });
       });
 
     })

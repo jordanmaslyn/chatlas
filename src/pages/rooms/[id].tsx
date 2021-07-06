@@ -21,7 +21,7 @@ export default function Page({ cacheSnapshot }: PageProps) {
   });
 
   const [message, setMessage] = useState('');
-  const [chatHistory, setChatHistory] = useState(['Messages will show up here']);
+  const [chatHistory, setChatHistory] = useState([{message: 'Messages will show up here', timestamp: Date.now()}]);
   const query = useQuery();
   const router = useRouter();
   const socket = useSockets(router?.query.id as string);
@@ -29,9 +29,9 @@ export default function Page({ cacheSnapshot }: PageProps) {
 
   const room = query.chatRoom({ id: router?.query.id as string });
 
-  const updateChat = (newMessage: string) => {
+  const updateChat = (newMessage: string, timestamp: number) => {
     const isScrolledToBottom = Math.abs(windowEl.current.scrollTop - (windowEl.current.scrollHeight - windowEl.current.offsetHeight)) < 30;
-    setChatHistory((messages) => [...messages, newMessage]);
+    setChatHistory((messages) => [...messages, {message: newMessage, timestamp}]);
     if (isScrolledToBottom) {
       setTimeout(() => {
         windowEl.current.scrollTop = windowEl.current.scrollHeight - windowEl.current.offsetHeight;
@@ -41,14 +41,15 @@ export default function Page({ cacheSnapshot }: PageProps) {
 
   const handleMessageSend = (event) => {
     event.preventDefault();
-    socket.emit('say', message, router?.query.id);
-    updateChat(message);
+    const timestamp = Date.now();
+    socket.emit('say', { message, timestamp }, router?.query.id);
+    updateChat(message, timestamp);
     setMessage('');
   }
 
   useEffect(() => {
-    socket?.on('say', (incomingMessage) => {
-      updateChat(incomingMessage);
+    socket?.on('say', ({message: incomingMessage, timestamp}) => {
+      updateChat(incomingMessage, timestamp);
     })
   }, [socket])
 
@@ -65,9 +66,9 @@ export default function Page({ cacheSnapshot }: PageProps) {
         <h1>Now Chatting in "{room.roomName}"</h1>
         <div dangerouslySetInnerHTML={{ __html: room.roomDescription }}></div>
         <div className={styles.window} ref={windowEl}>
-          {chatHistory.map(chatHistoryItem => {
+          {chatHistory.map(({message: historyMessage, timestamp}) => {
             return (
-              <div key={chatHistoryItem} className={styles.message}>{chatHistoryItem}</div>
+              <div key={`${historyMessage}-${timestamp}`} className={styles.message}>{historyMessage}</div>
             )
           })}
         </div>
