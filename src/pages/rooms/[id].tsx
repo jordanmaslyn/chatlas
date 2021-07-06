@@ -33,12 +33,9 @@ export default function Page({ cacheSnapshot }: PageProps) {
     const isScrolledToBottom = Math.abs(windowEl.current.scrollTop - (windowEl.current.scrollHeight - windowEl.current.offsetHeight)) < 30;
     setChatHistory((messages) => [...messages, newMessage]);
     if (isScrolledToBottom) {
-      console.log('IS scrolled to bottom')
       setTimeout(() => {
         windowEl.current.scrollTop = windowEl.current.scrollHeight - windowEl.current.offsetHeight;
       }, 100);
-    } else {
-      console.log('NOT scrolled to bottom')
     }
   }
 
