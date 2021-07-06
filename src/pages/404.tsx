@@ -1,13 +1,17 @@
 import React from 'react';
-import { useGeneralSettings } from '@wpengine/headless/react';
+import { client } from 'client';
 import { Header, Hero, Footer } from '../components';
 
 export default function Page(): JSX.Element {
-  const settings = useGeneralSettings();
+  const { useGeneralSettings } = client;
+  const generalSettings = useGeneralSettings();
 
   return (
     <>
-      <Header title={settings?.title} description={settings?.description} />
+      <Header
+        title={generalSettings?.title}
+        description={generalSettings?.description}
+      />
       <main className="content content-page">
         <Hero title={`Oops! That page can’t be found.`} />
         <div className="wrap">
@@ -21,7 +25,7 @@ export default function Page(): JSX.Element {
           </div>
         </div>
       </main>
-      <Footer copyrightHolder={settings?.title} />
+      <Footer copyrightHolder={generalSettings?.title} />
     </>
   );
 }

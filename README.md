@@ -1,4 +1,4 @@
-# Headless WordPress Getting Started Example
+# Next.js Headless WordPress Getting Started Example
 
 ## Setup
 
