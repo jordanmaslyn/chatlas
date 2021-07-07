@@ -11,7 +11,7 @@
     "generate": "gqless generate",
     "open": "run-s open:local",
     "open:local": "open-cli http://localhost:3000/",
-    "wpe-build": "next build"
+    "wpe-build": "gqless generate && next build"
   },
   "dependencies": {
     "@faustjs/core": "^0.7.0",
