@@ -15,7 +15,9 @@ import {
 
 const queryFetcher: QueryFetcher = async function (query, variables) {
   // Modify "http://localhost:10014/graphql" if needed
-  const response = await fetch('http://localhost:10014/graphql', {
+  const response = await fetch(`${
+    process.env.NEXT_PUBLIC_WORDPRESS_URL ?? process.env.WORDPRESS_URL
+  }/graphql`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
