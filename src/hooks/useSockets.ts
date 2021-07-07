@@ -27,6 +27,7 @@ export function useSockets(roomId: string) {
         });
 
         return () => {
+            console.log('cleaning up useSockets hook');
             socket?.disconnect();
         }
     }, [roomId])
