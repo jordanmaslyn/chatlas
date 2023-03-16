@@ -40,7 +40,7 @@ export default function Page({ cacheSnapshot }: PageProps) {
     const isScrolledToBottom =
       Math.abs(
         windowEl.current.scrollTop -
-        (windowEl.current.scrollHeight - windowEl.current.offsetHeight),
+          (windowEl.current.scrollHeight - windowEl.current.offsetHeight),
       ) < 30;
     setChatHistory((messages) => [
       ...messages,
@@ -64,22 +64,20 @@ export default function Page({ cacheSnapshot }: PageProps) {
 
   useEffect(() => {
     socket?.on('say', ({ message: incomingMessage, timestamp }) => {
-      updateChat(incomingMessage, timestamp);
+      if (incomingMessage) {
+        updateChat(incomingMessage, timestamp);
+      }
     });
   }, [socket]);
 
   return (
     <>
       <Head>
-        <title>
-          {room.roomName} - Chatlas!</title>
+        <title>{room.roomName} - Chatlas!</title>
       </Head>
 
       <main>
-        <h1>
-          Now Chatting in "{room.roomName}
-          "
-        </h1>
+        <h1>Now Chatting in "{room.roomName}"</h1>
         <div dangerouslySetInnerHTML={{ __html: room.roomDescription }} />
         <div className={styles.window} ref={windowEl}>
           {chatHistory.map(({ message: historyMessage, timestamp }) => {
